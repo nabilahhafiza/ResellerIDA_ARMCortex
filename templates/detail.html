@@ -1,0 +1,251 @@
+{% include 'header.html' %}
+<main id="main" class="main">
+
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="#">Home</a>
+                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                    <span class="breadcrumb-item active">Shop Detail</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Shop Detail Start -->
+    <form action="/checkout/{{produk['_id']}}" method="POST">
+    <div class="container-fluid pb-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-5 mb-30">
+                <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner bg-light">
+                        <div class="carousel-item active">
+                            <img class="w-100 h-100" src="../static/assets/imagePath/{{produk['gambar']}}" alt="Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 h-auto mb-30">
+                <div class="h-100 bg-light p-30">
+                    <input type="hidden" name="id" value="{{produk['_id']}}">
+                    <h3 >{{produk['nama']}}</h3>
+                    <h3 class="font-weight-semi-bold mb-4">{{produk['harga']}}</h3>
+
+                    <div class="d-flex  flex-row mb-3">
+                        <strong class="text-dark mr-3">Sizes:</strong>
+                        <form class="d-flex flex-row ">
+                            {% for size in ["S", "M", "L", "XL"] %}
+                                <div class="form-check mr-3">
+                                    <input class="form-check-input" type="radio" name="ukuran" value="{{ size }}"
+                                           id="{{ size }}-{{ produk._id }}" required
+                                         >
+                                    <label class="form-check-label" for="{{ size }}-{{ produk._id }}">
+                                        {{ size }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            
+                        </form>
+
+                        </div>
+                        <strong class="text-dark mr-3">Stok : ({{produk['stok']}})</strong>
+                            
+                    <div class="d-flex align-items-center mb-4 pt-2">
+                        <div class="input-group quantity mr-3" style="width: 130px;">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-minus" type="button">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="form-control bg-secondary border-0 text-center" name="kuantitas" value="1">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-plus " type="button">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        {% if produk['stok'] == 0 %}
+                        <button type="button" class="btn btn-secondary disabled px-3" ><i class="fa fa-shopping-cart mr-1"></i> Checkout</button>
+                        <p class="px-2 "><small class="text-danger">Stok habis*</small></p>
+
+                        {% elif msg %}
+                        <button type="submit" class="btn btn-primary px-3" ><i class="fa fa-shopping-cart mr-1"></i> Checkout</button>
+                        <p class="px-2"><small class="text-danger">{{ msg }}</small></p>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary px-3" ><i class="fa fa-shopping-cart mr-1"></i> Checkout</button>
+                    {% endif %}
+                </div>
+     
+
+                </div>
+            </div>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="bg-light p-30">
+                    <div class="nav nav-tabs mb-4">
+                        <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                        <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Ulasan</a>
+                        <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Review</a>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab-pane-1">
+                            <h4 class="mb-3">Product Description</h4>
+                            <p>{{produk['deskripsi']}}</p>
+                               </div>
+                    
+                               <div class="tab-pane fade" id="tab-pane-2">
+                                {% if review %}
+                                    
+                                
+                                <section class="client_section layout_padding p-0">
+ 
+                                    <div class="container px-0">
+                                        <div id="customCarousel2" class="carousel  carousel-fade" data-ride="carousel">
+                                            <div class="carousel-inner">
+                                                {% for review in review %}
+                                                <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
+                                                    <div class="box">
+                                                    <div class="client_info">
+                                                <div class="client_name">
+                                                  <h5>
+                                                    {{ review['username'] }}
+                                                  </h5>
+                                                  <h6>
+                                                    {{ review['nama'] }} ({{ review['rating'] }}/5)
+                                                  </h6>
+                                                </div>
+                                                <i class="fa fa-quote-left" aria-hidden="true"></i>
+                                              </div>
+                                              <p>
+                                                {{ review['review_text'] }}
+                                            </p>
+                                            <p><small>{{ review['timestamp'] }}</small></p>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                            
+                                    </div>
+                                    <div class="carousel_btn-box">
+                                        <a class="carousel-control-prev" href="#customCarousel2" role="button" data-slide="prev">
+                                            <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                            <span class="sr-only">Previous</span>
+                                          </a>
+                                          <a class="carousel-control-next" href="#customCarousel2" role="button" data-slide="next">
+                                            <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                            <span class="sr-only">Next</span>
+                                          </a>
+                                        </div>
+                                      </div>
+                                      
+                                    </div>
+                                  
+                                  </section>
+                                  {% endif %}
+                            </div>
+    
+
+                    <div class="tab-pane fade" id="tab-pane-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-4">Tinggalkan ulasan</h4>
+                                <div class="d-flex my-3">
+                                    <p class="mb-0 mr-2">Your Rating * :</p>
+                                    <div class="text-primary">
+                                        <i class="far fa-star" onclick="setRating(1)"></i>
+                                        <i class="far fa-star" onclick="setRating(2)"></i>
+                                        <i class="far fa-star" onclick="setRating(3)"></i>
+                                        <i class="far fa-star" onclick="setRating(4)"></i>
+                                        <i class="far fa-star" onclick="setRating(5)"></i>
+                                    </div>
+                                </div>
+                                <form action="/submit_review/{{produk['_id']}}" method="POST">
+                                    <input type="hidden" name="rating" id="rating" value="0">
+                                    <div class="form-group">
+                                        <label for="message">Your Review *</label>
+                                        <textarea id="message" name="review_text" cols="30" rows="5" class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <input type="submit" value="Tambah Ulasan" class="btn btn-primary px-3">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <!-- Shop Detail End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid py-5">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">
+            MUNGKIN KAMU JUGA SUKA</span></h2>
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="owl-carousel related-carousel">
+                    {% for produk in data2 %}
+                    <div class="product-item bg-light">
+                        <div class="product-img position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="../static/assets/imagePath/{{produk['gambar']}}" alt="">
+                            <div class="product-action">
+                                <a class="btn btn-outline-dark btn-square" href="/detail/{{produk['_id']}}"><i class="fa fa-shopping-cart"></i></a>
+                                
+                                
+                            </div>
+                        </div>
+                        <div class="text-center py-4">
+                            <a class="h6 text-decoration-none text-truncate" href="">{{produk['nama']}}</a>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                <h5>{{produk['harga']}}</h5>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                <small class="text-warning">Stok({{produk['stok']}})</small>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+
+
+
+
+                    </div>
+               
+                    </div>
+                    </div>
+    </div>
+    <!-- Products End -->
+
+
+    {% include 'footer.html' %}
+
+    <script>
+        function setRating(rating) {
+            let $ratingInput = $('#rating');
+            if ($ratingInput.length) {
+                $ratingInput.val(rating);
+            }
+
+            let $stars = $('.text-primary i');
+            $stars.each(function(index) {
+                if (index < rating) {
+                    $(this).removeClass('far').addClass('fas');
+                } else {
+                    $(this).removeClass('fas').addClass('far');
+                }
+            });
+        }
+    </script>

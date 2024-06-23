@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Log In | SWEETER</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
+
+    <!-- Bootstrap CSS -->
+    <link href="../static/assets/img/fav-icon.png" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+     <!-- SWEETALERT -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
+
+    
+    
+
+    <script>
+      function sign_in() {
+        let username = $("#input-username").val();
+        let password = $("#input-passwords").val();
+
+        if (username === "") {
+          $("#help-id-login").text("Masukan username anda.");
+          $("#input-username").focus();
+          return;
+        } else {
+          $("#help-id-login").text("");
+        }
+
+        if (password === "") {
+          $("#help-passwords").text("Masukan password anda.");
+          $("#input-password").focus();
+          return;
+        } else {
+          $("#help-passwords").text("");
+        }
+        $.ajax({
+          type: "POST",
+          url: "/sign_in",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+            if (response["result"] === "success") {
+              // Cookie token sudah diatur di server-side
+              $.cookie("ida", response["token"], { path: "/" });
+            window.location.replace("/");
+            } else {
+              <!-- alert(response["msg"]); -->
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: response["msg"],
+              });
+              $("#input-username").val("");
+              $("#input-passwords").val("");
+            }
+          },
+        });
+      }
+
+      function togglePasswordVisibility(passwordInputId, togglePasswordIconId) {
+        var passwordInput = document.getElementById(passwordInputId);
+        var togglePasswordIcon = document.getElementById(togglePasswordIconId);
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            togglePasswordIcon.classList.remove('fa-eye-slash');
+            togglePasswordIcon.classList.add('fa-eye');
+        } else {
+            passwordInput.type = 'password';
+            togglePasswordIcon.classList.remove('fa-eye');
+            togglePasswordIcon.classList.add('fa-eye-slash');
+        }
+    }
+
+      function clearInputs() {
+        $("#input-username").val("");
+        $("#input-passwords").val("");
+
+      }
+
+      
+      function toggle_sign_up() {
+        $("#sign-up-box").toggleClass("d-none");
+        $("#div-sign-in-or-up").toggleClass("d-none");
+        $("#btn-check-dup").toggleClass("d-none");
+        $("#help-id").toggleClass("d-none");
+        $("#help-password").toggleClass("d-none");
+        $("#help-password2").toggleClass("d-none");
+        $("#help-role").toggleClass("d-none");
+      }
+
+      function is_nickname(asValue) {
+        var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+        return regExp.test(asValue);
+      }
+      
+      function is_password(asValue) {
+        var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+        return regExp.test(asValue);
+      }
+
+      function check_dup() {
+        let username = $("#input-username").val();
+        if (username === "") {
+          $("#help-id")
+            .text("Masukkan ID Anda")
+            .removeClass("text-muted")
+            .addClass("text-danger");
+          $("#input-username").focus();
+          return;
+        }
+        if (!is_nickname(username)) {
+          $("#help-id")
+            .text(
+              "Periksa ID Anda. ID harus terdiri dari 2-10 karakter Inggris, angka, atau karakter khusus (._-)"
+            )
+            .removeClass("text-muted")
+            .addClass("text-danger");
+          $("#input-username").focus();
+          return;
+        }
+        $("#help-id").addClass("loading");
+        $.ajax({
+          type: "POST",
+          url: "/sign_up/check_dup",
+          data: {
+            username_give: username,
+          },
+          success: function (response) {
+            if (response["exists"]) {
+              $("#help-id")
+                .text("ID ini sudah digunakan.")
+                .removeClass("text-muted")
+                .addClass("text-danger");
+              $("#input-username").focus();
+            } else {
+              $("#help-id")
+                .text("ID ini tersedia!")
+                .removeClass("text-muted")
+                .addClass("text-success");
+            }
+            $("#help-id").removeClass("loading");
+          },
+        });
+      }
+
+      function sign_up() {
+        let username = $("#input-username").val();
+        let password = $("#input-passwords").val();
+        let password2 = $("#input-password2").val();
+
+        if ($("#help-id").hasClass("text-danger")) {
+          alert("Silakan periksa ID Anda");
+          return;
+        } else if (!$("#help-id").hasClass("text-success")) {
+          alert("Silakan periksa kembali ID Anda");
+          return;
+        }
+
+        if (password === "") {
+          $("#help-password")
+            .text("Silakan masukkan kata sandi Anda")
+            .removeClass("text-muted")
+            .addClass("text-danger");
+          $("#input-passwords").focus();
+          return;
+        } else if (!is_password(password)) {
+          $("#help-password")
+            .text(
+              "Periksa kata sandi Anda. Kata sandi harus terdiri dari 8-20 karakter Inggris, angka, atau karakter khusus (!@#$%^&*)"
+            )
+            .removeClass("text-danger")
+            .addClass("text-danger");
+          $("#input-passwords").focus();
+          return;
+        } else {
+          $("#help-password")
+            .text("Kata sandi ini bisa digunakan!")
+            .removeClass("text-muted")
+            .addClass("text-success");
+        }
+        if (password2 === "") {
+          $("#help-password2")
+            .text("Silakan masukkan kembali kata sandi Anda")
+            .removeClass("text-muted")
+            .addClass("text-danger");
+          $("#input-password2").focus();
+          return;
+        } else if (password2 !== password) {
+          $("#help-password2")
+            .text("Kata sandi tidak cocok")
+            .removeClass("text-muted")
+            .addClass("text-danger");
+          $("#input-password2").focus();
+          return;
+        } else {
+          $("#help-password2")
+            .text("Kata sandi cocok!")
+            .removeClass("text-danger")
+            .addClass("text-success");
+        }
+        $.ajax({
+          type: "POST",
+          url: "/sign_up/save",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+            alert("Anda telah berhasil mendaftar!");
+            window.location.replace("/login");
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="/">
+        <span class="h3 text-uppercase text-warning bg-dark px-2">RESELLER</span>
+        <span class="h3 text-uppercase text-dark bg-warning px-2 ml-n1">IDA</span>
+      </a>
+    </nav>
+
+    <section class="as-text-centered d-flex justify-content-center align-items-center vh-100">
+      <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center">
+          <div class="col-md-9 col-lg-6 col-xl-5">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
+          </div>
+          <div class="col-md-4 col-lg-6 col-xl-4">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-user"></i>
+                  </div>
+                </div>
+                <input id="input-username" class="form-control" type="text" placeholder="Username" />
+                <div id="btn-check-dup" class="d-none">
+                  <button class="btn btn-outline-secondary" onclick="check_dup()">
+                    Check your id
+                  </button>
+                </div>
+              </div>
+              <small id="help-id" class="form-text  text-muted d-none" style="font-size: 15px;">
+                Silakan masukkan 2-10 karakter bahasa Inggris, angka, atau karakter khusus berikut (._-)
+              </small>
+              <small id="help-id-login" class="form-text text-danger"></small>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                  </div>
+                </div>
+                <input id="input-passwords" class="form-control" type="password" placeholder="Password" />
+                <div class="input-group-append" style="cursor: pointer;">
+                  <div class="input-group-text" onclick="togglePasswordVisibility('input-passwords', 'togglePasswordIcon')">
+                    <i class="fa fa-eye-slash" id="togglePasswordIcon"></i>
+                  </div>
+              </div>
+              <small id="help-passwords" class="form-text text-danger"></small>
+              </div>
+                <small id="help-password" class="form-text text-muted d-none" style="font-size: 15px;">
+                  Silakan masukkan 8-20 karakter,
+                  angka, atau karakter khusus berikut (!@#$%^&*)
+                </small>
+
+            <div id="div-sign-in-or-up" class="text-center">
+              <div  style="margin-top: 20px;">
+                <button class="btn btn-warning " onclick="sign_in()" style="margin-right: 20px;">Sign In</button>
+                <button class="btn btn-secondary" onclick="clearInputs()">Clear</button>
+              </div>
+              <hr />
+            <h4>Jika Anda belum mendaftar</h4>
+            <button class="btn btn-outline-warning" style="font-size: large;" onclick="toggle_sign_up()">
+              Sign Up
+            </button>
+              </div>
+          </div>
+          <div id="sign-up-box" class="d-none">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                  </div>
+                </div>
+                <input id="input-password2" class="form-control" type="password" placeholder="Confirm your password" />
+                <div class="input-group-append" style="cursor: pointer;">
+                  <div class="input-group-text" onclick="togglePasswordVisibility('input-password2', 'togglePasswordIcon2')">
+                    <i class="fa fa-eye-slash" id="togglePasswordIcon2"></i>
+                  </div>
+              </div>
+              </div>
+              <small id="help-password2" class="form-text text-muted d-none">
+                Silakan masukkan kata sandi Anda lagi
+              </small>
+            </div>
+            <div  style="margin-top: 20px;">
+              <button class="btn btn-warning" style="margin-right: 20px;"  onclick="sign_up()">
+                Sign Up
+              </button>
+              <button class="btn btn-outline-secondary" style="margin-right: 20px;" onclick="toggle_sign_up()">
+                Cancel
+              </button>
+              <button class="btn btn-secondary"  onclick="clearInputs()">
+                Clear
+              </button>
+            </div>
+          </div>     
+        </div>
+      </div>
+    </section>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

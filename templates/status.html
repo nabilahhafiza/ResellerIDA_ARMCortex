@@ -1,0 +1,151 @@
+{% include 'header.html' %}
+
+<main id="main" class="main">
+  <div class="pagetitle">
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Status">Home</a></li>
+        <li class="breadcrumb-item active">Status</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+  <div class="tabel mt-4">
+    <div class="card border-0 shadow mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-centered table-nowrap mb-0 rounded mt-3">
+            <thead class="thead-light">
+              <tr>
+                <th class="border-0 text-center rounded-start">No</th>
+                
+                <th class="border-0 text-center">Nama Produk</th>
+                <th class="border-0 text-center">Kuantitas</th>
+                <th class="border-0 text-center">Ukuran</th>
+                <th class="border-0 text-center">Total</th>
+                <th class="border-0 text-center">Status</th>
+                <th class="border-0 rounded-end text-center">Aksi</th>
+              </tr>
+            </thead>
+
+            <tr>
+              {% for data in data %}
+                
+              <td class="text-center">{{loop.index}}</td>
+              
+              <td class="text-center">{{data['namapdk']}}</td>
+              <td class="text-center">{{data['kuantitas']}}</td>
+              <td class="text-center">{{data['ukuran']}}</td>
+              <td class="text-center">{{data['total']}}</td>
+              <td class="text-center status" >{{data['status']}}</td>
+
+              <td class="text-center">
+                {% if data['status'] == 'Di Terima' %}
+                <button onclick="update('{{ data._id }}')" id="terima-{{ data._id }}" type="button" class="btn btn-sm btn-primary d-none">Di Terima</button>
+                <button onclick="hapus('{{ data._id }}')" id="hapus-{{ data._id }}" type="button" class="btn btn-sm btn-danger ">Hapus</button>
+
+               {% else %}
+               <button onclick="update('{{ data._id }}')" id="terima-{{ data._id }}" type="button" class="btn btn-sm btn-primary ">Di Terima</button>
+                
+               
+                {% endif %}
+              </td>
+              </tr>
+            {% endfor %}
+              </table>
+        </div>
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+</main>
+<script>
+  $(document).ready(function() {
+    $(".status").each(function() {
+      let status = $(this).text();
+      if (status === "Diproses") {
+          $(this).addClass("text-info");
+      } else if (status === "Dikirim") {
+          $(this).removeClass("text-info").addClass("text-warning");
+      } else if (status === "Diterima") {
+          $(this).removeClass("text-warning").addClass("text-success");
+      }
+    })
+})
+
+function update(id) {
+  Swal.fire({
+    title: "Anda yakin pesanan ini telah di terima?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: "/update_status/" + id,
+        type: "POST",
+        data: {
+          status: "Diterima",
+        },
+        success: function (response) {
+          if (response.result === "success") {
+
+            Swal.fire({
+              title: "Selesai",
+              icon: "success",
+            }).then(() => {
+              window.location.reload()
+               
+               
+            });
+          }
+        },
+        error: function (error) {
+          Swal.fire({
+            title: "Error",
+            text: "Terjadi kesalahan saat mengupdate status.",
+            icon: "error",
+          });
+        },
+      });
+    }
+  });
+}
+
+function hapus(id) {
+      $.ajax({
+        url: "/delete_order/" + id,
+        type: "POST",
+       
+        success: function (response) {
+          if (response.result === "success") {
+
+            Swal.fire({
+              title: "Selesai",
+              icon: "success",
+            }).then(() => {
+              window.location.reload()
+               
+               
+            });
+          }
+        },
+        error: function (error) {
+          Swal.fire({
+            title: "Error",
+            text: "Terjadi kesalahan saat menghapus.",
+            icon: "error",
+          });
+        },
+      });
+    }
+
+
+  </script>
+<!-- End #main -->
+
+<!-- ======= Footer ======= -->
+{% include 'footer.html' %}
+

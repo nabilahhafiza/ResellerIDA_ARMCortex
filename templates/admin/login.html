@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Log In | SWEETER</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
+
+    <!-- Bootstrap CSS -->
+    <link href="../static/assets/img/fav-icon.png" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+     <!-- SWEETALERT -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
+
+    <script>
+      function sign_in() {
+        let username = $("#input-username").val();
+        let password = $("#input-passwords").val();
+
+        if (username === "") {
+          $("#help-id-login").text("Masukan username anda.");
+          $("#input-username").focus();
+          return;
+        } else {
+          $("#help-id-login").text("");
+        }
+
+        if (password === "") {
+          $("#help-passwords").text("Masukan password anda.");
+          $("#input-password").focus();
+          return;
+        } else {
+          $("#help-passwords").text("");
+        }
+        $.ajax({
+          type: "POST",
+          url: "/sign_in",
+          data: {
+            username_give: username,
+            password_give: password,
+          },
+          success: function (response) {
+            if (response["result"] === "success") {
+              // Cookie token sudah diatur di server-side
+              $.cookie("ida", response["token"], { path: "/" });
+            window.location.replace("/");
+            } else {
+              <!-- alert(response["msg"]); -->
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: response["msg"],
+              });
+              $("#input-username").val("");
+              $("#input-passwords").val("");
+            }
+          },
+        });
+      }
+
+      function togglePasswordVisibility() {
+        var passwordInput = document.getElementById('input-passwords');
+        var togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          togglePasswordIcon.classList.remove('fa-eye-slash');
+          togglePasswordIcon.classList.add('fa-eye');
+        } else {
+          passwordInput.type = 'password';
+          togglePasswordIcon.classList.remove('fa-eye');
+          togglePasswordIcon.classList.add('fa-eye-slash');
+        }
+      }
+
+      function clearInputs() {
+        $("#input-username").val("");
+        $("#input-passwords").val("");
+
+      }
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="/">
+        <span class="h3 text-uppercase text-warning bg-dark px-2">RESELLER</span>
+        <span class="h3 text-uppercase text-dark bg-warning px-2 ml-n1">IDA</span>
+      </a>
+    </nav>
+
+    <section class="as-text-centered d-flex justify-content-center align-items-center vh-100">
+      <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center">
+          <div class="col-md-9 col-lg-6 col-xl-5">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
+          </div>
+          <div class="col-md-4 col-lg-6 col-xl-4">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-user"></i>
+                  </div>
+                </div>
+                <input id="input-username" class="form-control" type="text" placeholder="Username" />
+  
+              </div>
+              <small id="help-id-login" class="form-text text-danger"></small>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                  </div>
+                </div>
+                <input id="input-passwords" class="form-control" type="password" placeholder="Password" />
+                <div class="input-group-append" style="cursor: pointer;">
+                  <div class="input-group-text" onclick="togglePasswordVisibility()">
+                    <i class="fa fa-eye-slash" id="togglePasswordIcon"></i>
+                  </div>
+              </div>
+              <small id="help-passwords" class="form-text text-danger"></small>
+            </div>
+
+            <div id="div-sign-in-or-up" class="text-center">
+              <div  style="margin-top: 20px;">
+                <button class="btn btn-warning " onclick="sign_in()" style="margin-right: 20px;">Sign In</button>
+                <button class="btn btn-secondary" onclick="clearInputs()">Clear</button>
+              </div>
+              <hr />
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

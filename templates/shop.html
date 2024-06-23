@@ -1,0 +1,108 @@
+{% include 'header.html' %}
+<main id="main" class="main">
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="#">Home</a>
+                    <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                    <span class="breadcrumb-item active">Shop List</span>
+                </nav>
+            </div>
+        </div>
+       
+    </div>
+    <!-- Breadcrumb End -->
+    <div class="container-fluid mb-5">
+        <div class="row px-xl-5">
+            <div class="col-4 col-sm-6 col-md-6">
+    <div class="search-bar">
+        <form action="/searchShop" method="POST">
+            <div class="input-group">
+                <input type="text" class="form-control" value="{{query}}" name="query" placeholder="Search for products">
+                <div class="input-group-append p-0">
+                    <span class="input-group-text bg-transparent text-primary p-0">
+                        <button type="submit" class="btn" title="Search"><i class="fa fa-search text-warning"></i></button>
+                        
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="col-12">
+<li class="text-dark">
+  <small class="text-dark">Pencarian hanya berdasarkan nama produk/warna*</small>
+</li>
+<li class="text-dark">
+  <small class="text-dark">Hapus pencarian lalu klik tombol cari untuk mengembalikan tampilan*</small>
+</li>
+</div>
+<div class="col-12 ">
+    <hr style="height:2px">
+</div>
+</div>
+
+      </div>
+
+    <!-- Shop Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5 justify-content-center">
+            
+            <!-- Shop Product Start -->
+            <div class="col-lg-9 col-md-8">
+                <div class="row pb-3 justify-content-center">
+                    {% for produk in data %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-12">
+                        <div class="product-item bg-light mb-4">
+                            <div class="product-img position-relative overflow-hidden">
+                                <img class="img-fluid w-100" src="../static/assets/imagePath/{{produk['gambar']}}" alt="">
+                                <div class="product-action">
+                                    <a class="btn btn-outline-dark btn-square" href="/detail/{{produk['_id']}}"><i class="fa fa-shopping-cart"></i></a>
+                                    <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a> -->
+                                    
+                                </div>
+                            </div>
+                            <div class="text-center py-4">
+                                <a class="h6 text-decoration-none text-truncate" href="/detail/{{produk['_id']}}">{{produk['nama']}}</a>
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <h5>{{produk['harga']}}</h5>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <small class="text-warning">Stok({{produk['stok']}})</small>
+                                </div>
+                                <!-- <div class="d-flex align-items-center justify-content-center mb-1">
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star-half-alt text-primary mr-1"></small>
+                                    <small>(99)</small>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                
+                    <!-- <div class="col-12">
+                        <nav>
+                          <ul class="pagination justify-content-center">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</span></a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                          </ul>
+                        </nav>
+                    </div> -->
+                </div>
+            </div>
+            <!-- Shop Product End -->
+        </div>
+    </div>
+    <!-- Shop End -->
+
+
+    {% include 'footer.html' %}

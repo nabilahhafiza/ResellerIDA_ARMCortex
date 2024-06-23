@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>MultiShop - Online Shop Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="../static/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">  
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="../static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="../static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../static/css/style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+   
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+            <div class="col-lg-4">
+                <a href="" class="text-decoration-none">
+                    <span class="h1 text-uppercase text-primary bg-dark px-2">Reseller</span>
+                    <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Ida</span>
+                </a>
+            </div>
+            <div class="col-lg-4 col-6 text-left">
+                <form action="">
+                </form>
+            </div>
+            <div class="col-lg-4 col-6 text-right">
+                <button type="button" class="btn btn-sm btn-dark"><a href="/logout" class="nav-item nav-link">Logout</a></button>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+    
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-dark mb-30 d-lg-none">
+        <div class="row px-xl-5">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <span class="h1 text-uppercase text-dark bg-light px-2">Resseler</span>
+                        <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1">Ida</span>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse justify-content-between mt-3" id="navbarCollapse">
+                        <hr class="bg-warning">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="/logout" class="nav-item nav-link d-lg-none d-md-flex">Logout</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Checkout Start -->
+<form action="/pesan/{{pesanan['_id']}}" method="POST" enctype="multipart/form-data">
+    <div class="container-fluid mt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Alamat Tujuan</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Nama</label>
+                            <input class="form-control" type="text" id="nama" name="namaUser" placeholder="Masukan Nama" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>No HP</label>
+                            <input class="form-control" type="text" id="ho" name="no" placeholder="Masukan Nomor" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Alamat</label>
+                            <input class="form-control" type="text" id="alamat" name="alamat" placeholder="Masukan Alamat" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Bukti</label>
+                            <input type="file" class="form-control" accept=".png,.jpg,.jpeg" id="bukti" name="bukti" required />
+                        </div>
+                    </div>
+                </div>
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Transfer Ke</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <p>Nomor Rekening : 2122618977621</p>
+                    <p>Atas Nama : Ida Reseller</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Order Total</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="border-bottom">
+                        <h6 class="mb-3">Products</h6>
+                        <div class="d-flex justify-content-between">
+                            <p><span id="namapdk">{{pesanan['nama']}}</span> <span id="kuantitas"> ({{pesanan['kuantitas']}})</span></p>
+                            <p><span id="harga">{{pesanan['harga']}}</span></p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p>Ukuran :</p>
+                            <p><span id="ukuran">{{pesanan['ukuran']}}</span></p>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5>Total</h5>
+                            <h5><span id="total">{{pesanan['total_harga']}}</span></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Pemesanan</span></h5>
+                    <div class="bg-light p-30 pb-0">
+                        <a href="/batal/{{pesanan['_id']}}" class="btn btn-block btn-primary font-weight-bold py-3">Batalkan</a>
+                    </div>
+                    <div class="bg-light p-30">
+                        <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3">Pesan Sekarang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Checkout End -->
+
+{% include 'footer.html' %}
+
+</body>
+</html>

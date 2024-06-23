@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+     <!-- SWEETALERT -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+<script>
+  function sign_out() {
+    Swal.fire({
+      title: "Anda yakin ingin keluar?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.removeCookie("ida", { path: "/" });
+        window.location.href = "/login";
+      }
+    });
+
+  }
+  </script>
+
+</head>
+<body>
+  
+ <!-- ======= Header ======= -->
+ <header id="header" class="header fixed-top d-flex align-items-center">
+
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="" class="text-decoration-none">
+      <span class="h3 text-uppercase text-warning bg-dark px-2">RESELLER</span>
+      <span class="h3 text-uppercase text-dark bg-warning px-2 ml-n1">IDA</span>
+  </a>
+    <i class="bi bi-list text-dark toggle-sidebar-btn"></i>
+  </div><!-- End Logo -->
+
+  
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+      
+      <li class="nav-item dropdown pe-3">
+        <a class="btn  text-dark"
+        aria-label="logout"
+       onclick="sign_out()">
+        Log Out
+        <i class="bi bi-box-arrow-right"></i>
+      </a>
+
+        
+          </li>
+
+        </ul><!-- End Profile Dropdown Items -->
+      </li><!-- End Profile Nav -->
+
+    </ul>
+  </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link " href="/">
+        <i class="bi bi-shop"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+    <li class="nav-item">
+      <a class="nav-link " href="/produk">
+        <i class=" bi-bag-plus "></i>
+        <span>Produk</span>
+      </a>
+    </li><!-- End Produk Nav -->
+    <li class="nav-item">
+      <a class="nav-link " href="/status">
+        <i class="bi bi-cart"></i>
+        <span>Status</span>
+      </a>
+    </li><!-- End Produk Nav -->
+    <li class="nav-item">
+      <a class="nav-link " href="/pembayaran">
+        <i class="bi bi-bank2 "></i>
+        <span>Pembayaran</span>
+      </a>
+    </li><!-- End Produk Nav -->
+    <li class="nav-item">
+      <a class="nav-link " href="/testimoni">
+        <i class="bi bi-card-checklist "></i>
+        <span>Testimoni</span>
+      </a>
+    </li><!-- End Produk Nav -->
+  </ul>
+
+</aside><!-- End Sidebar-->
+
+
+
+
+
+</body>
+</html>
+ 
